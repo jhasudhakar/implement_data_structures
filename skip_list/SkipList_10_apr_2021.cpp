@@ -43,6 +43,12 @@ SkipList::SkipList(const int _Height, const int MINVAL, const int MAXVAL)
 	{
 		slist[i] = new node(MIN_INFINITY);
 		slist[i]->next = new node(MAX_INFINITY);
+
+		if(i)
+		{
+			slist[i]->down = slist[i-1];
+			slist[i]->next->down = slist[i-1]->next;
+		}
 	}
 }
 
@@ -59,7 +65,7 @@ int SkipList::search(const int key, bool& is_found)
 	vector<struct node*> level_path;
 	struct node *prev = NULL, *cur = NULL;
 	prev = cur = slist[H-1];
-	while(height >=0)
+	while(height >0)
 	{
 		prev = cur = prev->down;
 		while(cur->val <= key)
@@ -89,7 +95,7 @@ void SkipList::insert(const int key)
 	vector<struct node*> level_path;
 	struct node *prev = NULL, *cur = NULL;
 	prev = cur = slist[H-1];
-	while(height >=0)
+	while(height >0)
 	{
 		prev = cur = prev->down;
 		while(cur->val <= key)
@@ -132,7 +138,7 @@ void SkipList::remove(const int key, bool& is_deleted)
 	vector<struct node*> level_path;
 	struct node *prev = NULL, *cur = NULL;
 	prev = cur = slist[H-1];
-	while(height >=0)
+	while(height >0)
 	{
 		prev = cur = prev->down;
 		while(cur->val < key)
@@ -169,11 +175,12 @@ void SkipList::unit_test()
 	vector<int> vec;
 	int val, index;
 	bool is_deleted, is_found;
-	char* op_name [] = {"Insert", "Delete", "Search"};
+	const char* op_name [] = {"Insert", "Delete", "Search"};
 	for(int i=0;i<OP; i++)
 	{
 		int code = random() % 3;
-		cout << "\nRunning loop " << i+1 << " of " << OP <<": Operation = " << op_name[code]; // << endl;
+		cout << "\nRunning loop " << i+1 << " of " << OP <<": Operation = " << op_name[code]  << endl;
+
 		switch (code)
 		{
 			case 0: /* insert*/
@@ -202,7 +209,7 @@ void SkipList::unit_test()
 				index = random() % (vec.size());
 				val = vec[index];
 				is_found = false;
-				this->remove(val, is_found);
+				this->search(val, is_found);
 				cout << " ==>  Searching  " << val << endl;
 				if(is_found == false)
 					assert(false);
@@ -216,7 +223,7 @@ void SkipList::unit_test()
 
 int main()
 {
-	SkipList obj(10, INT_MIN+10, INT_MAX-10);
+	SkipList obj(10, INT_MIN/2, INT_MAX/2);
 	obj.unit_test();
 	return 0;
 }
