@@ -31,7 +31,7 @@ class SkipList
 		void insert(const int key);
 		void remove(const int key, bool& is_deleted);
 
-		unit_test();
+		void unit_test();
 };
 
 SkipList::SkipList(const int _Height, const int MINVAL, const int MAXVAL)
@@ -167,14 +167,55 @@ void SkipList::unit_test()
 	*/
 	unsigned int OP = 100;
 	vector<int> vec;
-	for(int i=0;
+	int val, index;
+	bool is_deleted, is_found;
+	for(int i=0;i<OP; i++)
+	{
+		cout << "\nCompleted loop " << i+1 << " of " << OP; // << endl;
+		int code = random() % 3;
+		switch (code)
+		{
+			case 0: /* insert*/
+				val = random() % 1000;
+				vec.push_back(val);
+				this->insert(val);
+				cout << " ==>  Inserting " << val << endl;
+				break;
 
+			case 1: /* delete */
+				if(vec.size() == 0)
+					continue;
+				index = random() % (vec.size());
+				val = vec[index];
+				vec.erase(vec.begin() + index-1);
+				is_deleted = false;
+				this->remove(val, is_deleted);
+				if(is_deleted == false)
+					assert(false);
+				cout << " ==>  Deleting " << val << endl;
+				break;
 
+			case 2:
+				if(vec.size() == 0)
+					continue;
+				index = random() % (vec.size());
+				val = vec[index];
+				is_found = false;
+				this->remove(val, is_found);
+				cout << " ==>  Searching  " << val << endl;
+				if(is_found == false)
+					assert(false);
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 
 int main()
 {
 	SkipList obj(10, INT_MIN+10, INT_MAX-10);
+	obj.unit_test();
 	return 0;
 }
