@@ -169,10 +169,11 @@ void SkipList::unit_test()
 	vector<int> vec;
 	int val, index;
 	bool is_deleted, is_found;
+	char* op_name [] = {"Insert", "Delete", "Search"};
 	for(int i=0;i<OP; i++)
 	{
-		cout << "\nCompleted loop " << i+1 << " of " << OP; // << endl;
 		int code = random() % 3;
+		cout << "\nRunning loop " << i+1 << " of " << OP <<": Operation = " << op_name[code]; // << endl;
 		switch (code)
 		{
 			case 0: /* insert*/
